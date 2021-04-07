@@ -1,64 +1,56 @@
 import React from "react";
-
-const Header = ({ course: { name } }) => {
-  return (
-    <div>
-      <h1>{name}</h1>
-    </div>
-  );
-};
-
-const Content = ({ parts: { parts: namesAndExercises } }) => {
-  const list = namesAndExercises.map((x) => {
-    return (
-      <>
-        <h3>{x.name}</h3>
-        <ul>
-          <li># of exercises: {x.exercises}</li>
-        </ul>
-      </>
-    );
-  });
-
-  return <div>{list}</div>;
-};
-
-const Total = ({ parts: { parts } }) => {
-  let sum = 0;
-  parts.map((x) => (sum += x.exercises));
-  return <div>{sum}</div>;
-};
+import Course from "./components/Course";
 
 const App = () => {
-  const course = {
-    name: "Half Stack application development",
-    parts: [
-      {
-        name: "Fundamentals of React",
-        exercises: 10,
-      },
-      {
-        name: "Using props to pass data",
-        exercises: 7,
-      },
-      {
-        name: "State of a component",
-        exercises: 14,
-      },
-    ],
-  };
+  const courses = [
+    {
+      name: 'Half Stack application development',
+      id: 1,
+      parts: [
+        {
+          name: 'Fundamentals of React',
+          exercises: 10,
+          id: 1
+        },
+        {
+          name: 'Using props to pass data',
+          exercises: 7,
+          id: 2
+        },
+        {
+          name: 'State of a component',
+          exercises: 14,
+          id: 3
+        },
+        {
+          name: 'Redux',
+          exercises: 11,
+          id: 4
+        }
+      ]
+    }, 
+    {
+      name: 'Node.js',
+      id: 2,
+      parts: [
+        {
+          name: 'Routing',
+          exercises: 3,
+          id: 1
+        },
+        {
+          name: 'Middlewares',
+          exercises: 7,
+          id: 2
+        }
+      ]
+    }
+  ]
 
-  // Header takes care of rendering the name of the course,
-  // Content renders the parts and their number of exercises and
-  // Total renders the total number of exercises.
-
-  return (
-    <div>
-      <Header course={course} />
-      <Content parts={course} />
-      <Total parts={course} />
-    </div>
-  );
-};
+  return (<div>
+    {courses.map(course => 
+      <Course key={course.id} course={course} /> )}
+  </div>)
+}
 
 export default App;
