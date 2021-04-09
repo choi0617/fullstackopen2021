@@ -12,8 +12,16 @@ const App = () => {
     setNewName(e.target.value)
   }
 
+  const checkDuplicateNames = (newName) => { 
+    return persons.filter(person => person.name === newName)
+  }
+
   const addPerson = e => {
     e.preventDefault();
+
+    // check for duplicate names
+    if(checkDuplicateNames(newName).length > 0) return alert("Found duplicate")
+    
     const personObj = {
       name: newName
     }
