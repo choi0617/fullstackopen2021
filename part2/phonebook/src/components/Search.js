@@ -1,18 +1,15 @@
 import React from "react";
 
-const Search = () => {
-  // const {persons} = props;
-
-  // const handleSearchChange = (e) => {
-  //     return persons.filter(person => person.name === e.target.value)
-  // }
-
-  // return (
-  //     <div>Search: <input onChange={handleSearchChange}/></div>
-  // )
+const Search = (props) => {
+  const {handleSearchChange, searchResults} = props;
   return (
     <div>
-      Search: <input />
+      Search: <input onChange={handleSearchChange} />
+      {searchResults.map(person => {
+        return (
+          <p key={person.name}>{person.name} {person.number}</p>
+        )
+      })}
     </div>
   );
 };
