@@ -1,12 +1,18 @@
-import React from 'react';
+import React from "react";
 
 const Country = (props) => {
-    const {name} = props;
-    return (
-        <div>
-           <p>{name}</p>
-        </div>
-    )
-}
+  const { name, capital, population, flagImg } = props;
+  return (
+    <div>
+      <p>{name}</p>
+      {capital ? <><p>Capital: {capital}</p>
+      <p>Population: {population}</p>
+      <p>
+        <img alt="country flag" src={flagImg} width='400' height='400' />
+      </p></> : <></>}
+      
+    </div>
+  );
+};
 
 export default Country;
