@@ -1,20 +1,23 @@
 import React from "react";
 
-
 const Countries = (props) => {
   const { searchResults, showCountryDetailBtn } = props;
   return (
     <div>
       {searchResults.map((country) => {
-        return (<p key={country.name}> {country.name} <button onClick={() => showCountryDetailBtn(country)}>Show</button></p>)
+        return (
+          <p key={country.name}>
+            {" "}
+            {country.name}{" "}
+            <button onClick={() => showCountryDetailBtn(country)}>Show</button>
+          </p>
+        );
       })}
-      
     </div>
   );
 };
 
 export default Countries;
-
 
 // return (
 //     <div>

@@ -1,20 +1,13 @@
 import React from "react";
 
+import Weather from "./Weather";
 
 const Country = (props) => {
-  const {
-    name,
-    capital,
-    population,
-    flagImg,
-    languages
-  } = props;
+  const { name, capital, population, flagImg, languages } = props;
   return (
     <div>
-      <p>
-        {name}
-      </p>
-      
+      <p>{name}</p>
+
       {capital ? (
         <>
           <p>Capital: {capital}</p>
@@ -28,6 +21,7 @@ const Country = (props) => {
           <p>
             <img alt="country flag" src={flagImg} height="80px" />
           </p>
+          <Weather capital={capital} />
         </>
       ) : null}
     </div>

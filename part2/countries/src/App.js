@@ -5,11 +5,10 @@ import Search from "./components/Search";
 import Country from "./components/Country";
 import Countries from "./components/Countries";
 
-
 const App = () => {
   const [countryData, setCountryData] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
- 
+
   useEffect(() => {
     axios
       .get("https://restcountries.eu/rest/v2/all")
@@ -23,11 +22,10 @@ const App = () => {
     );
 
     setSearchResults(results);
-    //console.log(searchResults);
   };
 
   const showCountryDetailBtn = (country) => {
-    setSearchResults([country])
+    setSearchResults([country]);
   };
 
   return (
@@ -46,8 +44,12 @@ const App = () => {
               flagImg={country.flag}
             />
           ))
-        ) : 
-        <Countries searchResults={searchResults} showCountryDetailBtn={showCountryDetailBtn}  />
+        ) : (
+          <Countries
+            searchResults={searchResults}
+            showCountryDetailBtn={showCountryDetailBtn}
+          />
+        )
       ) : (
         <p>Too many matches, specify another filter</p>
       )}
