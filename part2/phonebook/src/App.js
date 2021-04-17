@@ -2,17 +2,11 @@ import React, { useEffect, useState } from "react";
 import Persons from "./components/Persons";
 import Search from "./components/Search";
 import PersonForm from "./components/PersonForm";
-import axios from "axios";
+
+import personServices from './services/personServices';
  
 
 const App = () => {
-  // const [persons, setPersons] = useState([
-  //   { name: "Arto Hellas", number: "040-123456" },
-  //   { name: "Ada Lovelace", number: "39-44-5323523" },
-  //   { name: "Dan Abramov", number: "12-43-234345" },
-  //   { name: "Mary Poppendieck", number: "39-23-6423122" },
-  // ]);
-
 
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
@@ -21,8 +15,8 @@ const App = () => {
 
 
   useEffect(() => {
-    axios.get('http://localhost:3001/persons')
-      .then(response => setPersons(response.data))
+    personServices.getAll()
+      .then(persons => {setPersons(persons)})
   }, [])
 
 
@@ -61,9 +55,16 @@ const App = () => {
       number: newNumber,
     };
 
-    setPersons(persons.concat(personObj));
-    setNewName("");
-    setNewNumber("");
+    personServices.create(personObj)
+      .then(returnedPersonObj => {
+        //console.log(returnedPersonObj);
+        setPersons(persons.concat(returnedPersonObj))
+        setNewName("")
+        setNewNumber("")
+      })
+      .catch(e => {
+        console.log(e);
+      })
   };
 
   return (
