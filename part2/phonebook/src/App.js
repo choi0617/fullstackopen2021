@@ -3,22 +3,19 @@ import Persons from "./components/Persons";
 import Search from "./components/Search";
 import PersonForm from "./components/PersonForm";
 
-import personServices from './services/personServices';
- 
+import personServices from "./services/personServices";
 
 const App = () => {
-
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [searchResults, setSearchResults] = useState([]);
 
-
   useEffect(() => {
-    personServices.getAll()
-      .then(persons => {setPersons(persons)})
-  }, [])
-
+    personServices.getAll().then((persons) => {
+      setPersons(persons);
+    });
+  }, []);
 
   const handleNameChange = (e) => {
     setNewName(e.target.value);
@@ -55,24 +52,38 @@ const App = () => {
       number: newNumber,
     };
 
-    personServices.create(personObj)
-      .then(returnedPersonObj => {
+    personServices
+      .create(personObj)
+      .then((returnedPersonObj) => {
         //console.log(returnedPersonObj);
-        setPersons(persons.concat(returnedPersonObj))
-        setNewName("")
-        setNewNumber("")
+        setPersons(persons.concat(returnedPersonObj));
+        setNewName("");
+        setNewNumber("");
       })
-      .catch(e => {
+      .catch((e) => {
         console.log(e);
-      })
+      });
+  };
+
+  const deletePerson = (id) => {
+    const toDelete = persons.find((person) => person.id === id);
+    const confirmDelete = window.confirm(`Delete ${toDelete.name}?`);
+
+    if (confirmDelete) {
+      personServices.deleteContact(id).then((res) => {
+        setPersons(persons.filter((person) => person.id !== id));
+      });
+    }
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
       <div>
-        <Search handleSearchChange={handleSearchChange} searchResults={searchResults} />
-        
+        <Search
+          handleSearchChange={handleSearchChange}
+          searchResults={searchResults}
+        />
       </div>
       <PersonForm
         addPerson={addPerson}
@@ -84,9 +95,16 @@ const App = () => {
       <h2>Numbers</h2>
 
       <div>
-       {persons.map(person => <Persons key={person.name} name={person.name} number={person.number}/>)}
+        {persons.map((person) => (
+          <Persons
+            id={person.id}
+            key={person.id}
+            name={person.name}
+            number={person.number}
+            deletePerson={deletePerson}
+          />
+        ))}
       </div>
-    
     </div>
   );
 };
