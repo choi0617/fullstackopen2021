@@ -12,7 +12,8 @@ const create = (newObj) => {
 }
 
 const update = (id, newObj) => {
-    return axios.put(`${baseUrl}/${id}`, newObj)
+    const request = axios.put(`${baseUrl}/${id}`, newObj)
+    return request.then(res => res.data)
 }
 
 const deleteContact = (id) => {

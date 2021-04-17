@@ -40,29 +40,53 @@ const App = () => {
     return persons.filter((person) => person.name === newName);
   };
 
+  const updatePerson = (name, number) => {
+    const personToUpdate = persons.find((person) => person.name === name);
+    const ok = window.confirm(
+      `${name} already exists. Do you want to update phone number?`
+    );
+    if (ok) {
+      personServices
+        .update(personToUpdate.id, {
+          name: name,
+          number: number,
+        })
+        .then((returnedObj) => {
+          setPersons(
+            persons.map((person) =>
+              person.id !== personToUpdate.id ? person : returnedObj
+            )
+          );
+          setNewName("");
+          setNewNumber("");
+        });
+    }
+  };
+
   const addPerson = (e) => {
     e.preventDefault();
 
     // check for duplicate names
-    if (checkDuplicateNames(newName).length > 0)
-      return alert(`${newName} is already added to the phonebook`);
+    if (checkDuplicateNames(newName).length > 0) {
+      updatePerson(newName, newNumber);
+      //return alert(`${newName} is already added to the phonebook`);
+    } else {
+      // axios.POST requires two parameters. First, it needs the URI of the service endpoint.
+      // Second, an object which contains the properties that we want to send to our
+      // server should be passed to it.
 
-    const personObj = {
-      name: newName,
-      number: newNumber,
-    };
-
-    personServices
-      .create(personObj)
-      .then((returnedPersonObj) => {
-        //console.log(returnedPersonObj);
-        setPersons(persons.concat(returnedPersonObj));
-        setNewName("");
-        setNewNumber("");
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+      personServices
+        .create({ name: newName, number: newNumber })
+        .then((returnedPersonObj) => {
+          // returnedPersonObj is the personObj returned.
+          setPersons(persons.concat(returnedPersonObj));
+          setNewName("");
+          setNewNumber("");
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
   };
 
   const deletePerson = (id) => {
