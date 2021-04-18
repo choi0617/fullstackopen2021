@@ -63,7 +63,9 @@ const App = () => {
           setNewNumber("");
         })
         .catch(err => {
-          console.log(err)
+          console.log("failed", err)
+          setNotification(`${personToUpdate.name} has already been removed from the server`)
+          setPersons(persons.filter(person => person.id !== personToUpdate.id))
         });
     }
   };
