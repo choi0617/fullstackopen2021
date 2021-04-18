@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Persons from "./components/Persons";
 import Search from "./components/Search";
 import PersonForm from "./components/PersonForm";
+import Notification from "./components/Notification"
 
 import personServices from "./services/personServices";
 
@@ -10,6 +11,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [notification, setNotification] = useState("")
 
   useEffect(() => {
     personServices.getAll().then((persons) => {
@@ -59,6 +61,9 @@ const App = () => {
           );
           setNewName("");
           setNewNumber("");
+        })
+        .catch(err => {
+          console.log(err)
         });
     }
   };
@@ -82,9 +87,11 @@ const App = () => {
           setPersons(persons.concat(returnedPersonObj));
           setNewName("");
           setNewNumber("");
+          setNotification(`${newName} has been created!`)
+          setTimeout(() => { setNotification(null)}, 5000)
         })
-        .catch((e) => {
-          console.log(e);
+        .catch((err) => {
+          console.log(err);
         });
     }
   };
@@ -96,13 +103,14 @@ const App = () => {
     if (confirmDelete) {
       personServices.deleteContact(id).then((res) => {
         setPersons(persons.filter((person) => person.id !== id));
-      });
+      }).catch(err => console.log(err));
     }
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notification}/>
       <div>
         <Search
           handleSearchChange={handleSearchChange}
