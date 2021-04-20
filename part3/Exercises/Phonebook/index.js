@@ -28,9 +28,15 @@ const persons = [
   },
 ];
 
-app.get("/api/persons", (req,res) => {
-    res.json(persons)
-})
+app.get("/api/persons", (req, res) => {
+  res.json(persons);
+});
+
+app.get("/info", (req, res) => {
+  const lenOfPhonebook = persons.length;
+  const date = new Date().toUTCString();
+  res.send(`Phonebook has info for ${lenOfPhonebook} \n${date}`);
+});
 
 app.listen(PORT);
 console.log(`Listening on port: ${PORT}`);
