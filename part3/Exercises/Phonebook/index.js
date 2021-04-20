@@ -49,6 +49,25 @@ app.get("/info", (req, res) => {
   res.send(`Phonebook has info for ${lenOfPhonebook} \n${date}`);
 });
 
+app.post("/api/persons", (req,res) => {
+    const body = req.body;
+
+    if(!body.name) {
+        return res.status(400).json({
+            error: "Name Missing"
+        })
+    }
+
+    const person = {
+        name: body.name,
+        number: body.number,
+        id: Date.now()
+    }
+
+    persons = persons.concat(person)
+    res.json(persons)
+})
+
 app.delete("/api/persons/:id", (req, res) => {
   const id = Number(req.params.id);
   persons = persons.filter((person) => person.id !== id);
