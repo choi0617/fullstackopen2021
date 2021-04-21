@@ -3,6 +3,8 @@ const app = express();
 
 const PORT = 3001;
 
+const checkDuplicateName = require("./utilities/checkDuplicateName")
+
 app.use(express.json());
 
 let persons = [
@@ -52,9 +54,19 @@ app.get("/info", (req, res) => {
 app.post("/api/persons", (req,res) => {
     const body = req.body;
 
-    if(!body.name) {
+    if(!body.name || !body.number) {
         return res.status(400).json({
-            error: "Name Missing"
+            error: "Name or number missing"
+        })
+    }
+
+    const name = body.name;
+
+    const duplicateName = checkDuplicateName(persons, name)
+    
+    if(duplicateName.length > 0) {
+        return res.status(400).json({
+            error: "Name already exists"
         })
     }
 
