@@ -1,10 +1,11 @@
 const express = require("express");
+const morgan = require("morgan");
 const app = express();
 
+const checkDuplicateName = require("./utilities/checkDuplicateName")
 const PORT = 3001;
 
-const checkDuplicateName = require("./utilities/checkDuplicateName")
-
+app.use(morgan('tiny'))
 app.use(express.json());
 
 let persons = [
