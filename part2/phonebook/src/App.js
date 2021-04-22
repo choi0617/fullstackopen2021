@@ -54,11 +54,13 @@ const App = () => {
           number: number,
         })
         .then((returnedObj) => {
-          setPersons(
-            persons.map((person) =>
-              person.id !== personToUpdate.id ? person : returnedObj
-            )
-          );
+          // setPersons(
+          //   persons.map((person) =>
+          //     person.id !== personToUpdate.id ? person : returnedObj
+          //   )
+          // );
+          console.log(returnedObj);
+          // check out code above to see why update isn't working
           setNewName("");
           setNewNumber("");
         })
@@ -86,7 +88,7 @@ const App = () => {
         .create({ name: newName, number: newNumber })
         .then((returnedPersonObj) => {
           // returnedPersonObj is the personObj returned.
-          setPersons(persons.concat(returnedPersonObj));
+          setPersons(returnedPersonObj);
           setNewName("");
           setNewNumber("");
           setNotification(`${newName} has been created!`)

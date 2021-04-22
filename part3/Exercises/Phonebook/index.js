@@ -1,6 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const app = express();
+const cors = require('cors');
 
 const checkDuplicateName = require("./utilities/checkDuplicateName")
 const PORT = 3001;
@@ -9,6 +10,7 @@ morgan.token('body', (req, res) => JSON.stringify(req.body))
 
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 app.use(express.json());
+app.use(cors());
 
 let persons = [
   {
