@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Persons from "./components/Persons";
 import Search from "./components/Search";
 import PersonForm from "./components/PersonForm";
-import Notification from "./components/Notification"
+import Notification from "./components/Notification";
 
 import personServices from "./services/personServices";
 
@@ -11,7 +11,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-  const [notification, setNotification] = useState("")
+  const [notification, setNotification] = useState("");
 
   useEffect(() => {
     personServices.getAll().then((persons) => {
@@ -54,20 +54,22 @@ const App = () => {
           number: number,
         })
         .then((returnedObj) => {
-          // setPersons(
-          //   persons.map((person) =>
-          //     person.id !== personToUpdate.id ? person : returnedObj
-          //   )
-          // );
-          console.log(returnedObj);
-          // check out code above to see why update isn't working
+          setPersons(
+            persons.map((person) =>
+              person.id !== personToUpdate.id ? person : returnedObj
+            )
+          );
           setNewName("");
           setNewNumber("");
         })
-        .catch(err => {
-          console.log("failed", err)
-          setNotification(`${personToUpdate.name} has already been removed from the server`)
-          setPersons(persons.filter(person => person.id !== personToUpdate.id))
+        .catch((err) => {
+          console.log("failed", err);
+          setNotification(
+            `${personToUpdate.name} has already been removed from the server`
+          );
+          setPersons(
+            persons.filter((person) => person.id !== personToUpdate.id)
+          );
         });
     }
   };
@@ -76,28 +78,31 @@ const App = () => {
     e.preventDefault();
 
     // check for duplicate names
-    if (checkDuplicateNames(newName).length > 0) {
-      updatePerson(newName, newNumber);
-      //return alert(`${newName} is already added to the phonebook`);
-    } else {
-      // axios.POST requires two parameters. First, it needs the URI of the service endpoint.
-      // Second, an object which contains the properties that we want to send to our
-      // server should be passed to it.
+    // if (checkDuplicateNames(newName).length > 0) {
+    // updatePerson(newName, newNumber);
+    //return alert(`${newName} is already added to the phonebook`);
+    // } else {
+    // axios.POST requires two parameters. First, it needs the URI of the service endpoint.
+    // Second, an object which contains the properties that we want to send to our
+    // server should be passed to it.
 
-      personServices
-        .create({ name: newName, number: newNumber })
-        .then((returnedPersonObj) => {
-          // returnedPersonObj is the personObj returned.
-          setPersons(returnedPersonObj);
-          setNewName("");
-          setNewNumber("");
-          setNotification(`${newName} has been created!`)
-          setTimeout(() => { setNotification(null)}, 5000)
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+    personServices
+      .create({ name: newName, number: newNumber })
+      .then((returnedPersonObj) => {
+        // returnedPersonObj is the personObj returned.
+        console.log(returnedPersonObj)
+        setPersons([...persons,returnedPersonObj]);
+        setNewName("");
+        setNewNumber("");
+        setNotification(`${newName} has been created!`);
+        setTimeout(() => {
+          setNotification(null);
+        }, 5000);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    // }
   };
 
   const deletePerson = (id) => {
@@ -105,16 +110,19 @@ const App = () => {
     const confirmDelete = window.confirm(`Delete ${toDelete.name}?`);
 
     if (confirmDelete) {
-      personServices.deleteContact(id).then((res) => {
-        setPersons(persons.filter((person) => person.id !== id));
-      }).catch(err => console.log(err));
+      personServices
+        .deleteContact(id)
+        .then((res) => {
+          setPersons(persons.filter((person) => person.id !== id));
+        })
+        .catch((err) => console.log(err));
     }
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={notification}/>
+      <Notification message={notification} />
       <div>
         <Search
           handleSearchChange={handleSearchChange}
