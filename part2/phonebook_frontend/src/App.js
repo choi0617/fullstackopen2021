@@ -77,32 +77,34 @@ const App = () => {
   const addPerson = (e) => {
     e.preventDefault();
 
-    // check for duplicate names
-    // if (checkDuplicateNames(newName).length > 0) {
-    // updatePerson(newName, newNumber);
-    //return alert(`${newName} is already added to the phonebook`);
-    // } else {
-    // axios.POST requires two parameters. First, it needs the URI of the service endpoint.
-    // Second, an object which contains the properties that we want to send to our
-    // server should be passed to it.
+    //check for duplicate names
+    if (checkDuplicateNames(newName).length > 0) {
+      updatePerson(newName, newNumber);
+      return alert(`${newName} updated!`);
+    } else {
+      // axios.POST requires two parameters. First, it needs the URI of the service endpoint.
+      // Second, an object which contains the properties that we want to send to our
+      // server should be passed to it.
 
-    personServices
-      .create({ name: newName, number: newNumber })
-      .then((returnedPersonObj) => {
-        // returnedPersonObj is the personObj returned.
-        console.log(returnedPersonObj)
-        setPersons([...persons,returnedPersonObj]);
-        setNewName("");
-        setNewNumber("");
-        setNotification(`${newName} has been created!`);
-        setTimeout(() => {
-          setNotification(null);
-        }, 5000);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    // }
+      personServices
+        .create({ name: newName, number: newNumber })
+        .then((returnedPersonObj) => {
+          // returnedPersonObj is the personObj returned.
+          setPersons([...persons, returnedPersonObj]);
+          setNewName("");
+          setNewNumber("");
+          setNotification(`${newName} has been created!`);
+          setTimeout(() => {
+            setNotification(null);
+          }, 5000);
+        })
+        .catch((err) => {
+          setNotification(`${err.response.data.error}`);
+          setTimeout(() => {
+            setNotification(null);
+          }, 5000);
+        });
+    }
   };
 
   const deletePerson = (id) => {
