@@ -5,7 +5,7 @@ const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
 
-const Blog = require("./models/blog")
+const blogRouter = require("./controllers/blog")
 
 mongoose.connect(config.MONGODB_URI, {
   useNewUrlParser: true,
@@ -27,26 +27,7 @@ app.use(cors());
 app.use(express.json());
 
 
-app.get("/api/blogs", (req, res) => {
-    Blog.find({}).then(blogs => {
-        res.json(blogs)
-    })
-})
-
-app.post("/api/blogs", (req, res) => {
-    const body = req.body
-
-    const newBlog = new Blog({
-        title: body.title,
-        author: body.author,
-        url: body.url,
-        likes: body.likes,
-    })
-
-    newBlog.save().then(result => {
-        res.status(201).json(result)
-    })
-})
+app.use("/api/blogs", blogRouter);
 
 app.listen(config.PORT, () => {
   console.log(`listening on: *${config.PORT}`);
