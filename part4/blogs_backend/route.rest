@@ -11,3 +11,6 @@ Content-Type: application/json
     "url": "some/url/1",
     "likes": 4
 }
+
+###
+DELETE http://localhost:3001/api/blogs/608d617c711c10e060a50fac
