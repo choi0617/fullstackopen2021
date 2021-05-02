@@ -1,4 +1,4 @@
-const { dummy, totalLikes } = require("../utils/list_helper");
+const { dummy, totalLikes, favoriteBlog } = require("../utils/list_helper");
 
 const blogs = [
   {
@@ -54,6 +54,8 @@ const blogs = [
   },
 ];
 
+const listWithZeroBlog = [];
+
 test("dummy function", () => {
   const blogs = [];
   const result = dummy(blogs);
@@ -61,27 +63,25 @@ test("dummy function", () => {
   expect(result).toBe(1);
 });
 
+const listWithOneBlog = [
+  {
+    _id: "5a422aa71b54a676234d17f8",
+    title: "Go To Statement Considered Harmful",
+    author: "Edsger W. Dijkstra",
+    url:
+      "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
+    likes: 5,
+    __v: 0,
+  },
+];
+
 describe("total likes", () => {
-  const listWithOneBlog = [
-    {
-      _id: "5a422aa71b54a676234d17f8",
-      title: "Go To Statement Considered Harmful",
-      author: "Edsger W. Dijkstra",
-      url:
-        "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
-      likes: 5,
-      __v: 0,
-    },
-  ];
-
-  const listWithZeroBlog = [];
-
   test("when list has one blog, equals the likes of that", () => {
     const result = totalLikes(listWithOneBlog);
     expect(result).toBe(5);
   });
 
-  test("when list has 0 blog, result is 0", () => {
+  test("when list has 0 blogs, result is 0", () => {
     const result = totalLikes(listWithZeroBlog);
     expect(result).toBe(0);
   });
@@ -90,4 +90,21 @@ describe("total likes", () => {
     const result = totalLikes(blogs);
     expect(result).toBe(36);
   });
+});
+
+describe("favorite blog (most likes)", () => {
+  test("when list has 0 blogs, result is 0 ", () => {
+    const result = favoriteBlog(listWithZeroBlog);
+    expect(result).toEqual(null);
+  });
+
+  test("when list has 1 blog, result is that blog", () => {
+      const result = favoriteBlog(listWithOneBlog)
+      expect(result).toEqual(listWithOneBlog[0])
+  })
+
+  test("when many blogs, result is the blog with the most likes", () => {
+      const result = favoriteBlog(blogs)
+      expect(result).toEqual(blogs[2])
+  })
 });
