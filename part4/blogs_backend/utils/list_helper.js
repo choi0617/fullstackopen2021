@@ -1,6 +1,4 @@
-const dummy = (blogs) => {
-  return 1;
-};
+const _ = require("lodash");
 
 const totalLikes = (blogs) => {
   if (blogs.length === 0) {
@@ -14,8 +12,6 @@ const totalLikes = (blogs) => {
 };
 
 const favoriteBlog = (blogs) => {
-  // const arrayOfLikes = blogs.map(blog => blog.likes)
-
   if (blogs.length === 0) {
     return null;
   } else if (blogs.length === 1) {
@@ -32,4 +28,19 @@ const favoriteBlog = (blogs) => {
   }
 };
 
-module.exports = { dummy, totalLikes, favoriteBlog };
+const mostBlogs = (blogs) => {
+  if (blogs.length === 0) {
+    return null;
+  } else if (blogs.length === 1) {
+    return blogs[0];
+  } else {
+    const blogsByAuthors = _.values(_.groupBy(blogs, "author")).map(blog => ({
+        author: blog[0].author,
+        blogs: blog.length
+    }))
+    const blogWithMostAuthors = blogsByAuthors[blogsByAuthors.length - 1]
+    return blogWithMostAuthors
+  }
+};
+
+module.exports = { totalLikes, favoriteBlog, mostBlogs };

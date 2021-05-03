@@ -1,4 +1,4 @@
-const { dummy, totalLikes, favoriteBlog } = require("../utils/list_helper");
+const { totalLikes, favoriteBlog, mostBlogs } = require("../utils/list_helper");
 
 const blogs = [
   {
@@ -56,13 +56,6 @@ const blogs = [
 
 const listWithZeroBlog = [];
 
-test("dummy function", () => {
-  const blogs = [];
-  const result = dummy(blogs);
-
-  expect(result).toBe(1);
-});
-
 const listWithOneBlog = [
   {
     _id: "5a422aa71b54a676234d17f8",
@@ -99,12 +92,32 @@ describe("favorite blog (most likes)", () => {
   });
 
   test("when list has 1 blog, result is that blog", () => {
-      const result = favoriteBlog(listWithOneBlog)
-      expect(result).toEqual(listWithOneBlog[0])
-  })
+    const result = favoriteBlog(listWithOneBlog);
+    expect(result).toEqual(listWithOneBlog[0]);
+  });
 
   test("when many blogs, result is the blog with the most likes", () => {
-      const result = favoriteBlog(blogs)
-      expect(result).toEqual(blogs[2])
-  })
+    const result = favoriteBlog(blogs);
+    expect(result).toEqual(blogs[2]);
+  });
+});
+
+describe("Most blogs", () => {
+  test("when list has 0 blogs, result is null", () => {
+    const result = mostBlogs(listWithZeroBlog);
+    expect(result).toEqual(null);
+  });
+
+  test("when list has 1 blog, result is that blog", () => {
+    const result = mostBlogs(listWithOneBlog);
+    expect(result).toEqual(listWithOneBlog[0]);
+  });
+
+  test("when list has many blogs, result is the author with the most blogs", () => {
+    const result = mostBlogs(blogs);
+    expect(result).toEqual({
+        author: 'Robert C. Martin',
+        blogs: 3
+    });
+  });
 });
