@@ -83,8 +83,29 @@ test("all blogs are returned", async () => {
 test("id field is defined", async () => {
   const response = await api.get("/api/blogs");
   console.log(response);
-  
+
   expect(response.body[0].id).toBeDefined();
+});
+
+test("a new blog post is added", async () => {
+  const newBlog = {
+    title: 'Great developer experience',
+    author: 'Hector Ramos',
+    url: 'https://jestjs.io/blog/2017/01/30/a-great-developer-experience',
+    likes: 7
+  }
+
+  await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .expect(200)
+    .expect("Content-Type", /application\/json/);
+
+  const response = await api.get("/api/blogs");
+  const titles = response.body.map((r) => r.title);
+
+  expect(response.body).toHaveLength(initialBlogs.length + 1);
+  expect(titles).toContain("Great developer experience");
 });
 
 afterAll(() => {
