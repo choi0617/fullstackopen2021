@@ -121,23 +121,33 @@ test("likes default to 0", async () => {
     .expect(201)
     .expect("Content-Type", /application\/json/);
 
-  const response = await api.get("/api/blogs")
-  const justAddedBlog = response.body.find(b => b.url === newBlog.url)
+  const response = await api.get("/api/blogs");
+  const justAddedBlog = response.body.find((b) => b.url === newBlog.url);
 
-  expect(justAddedBlog.likes).toBe(0)
+  expect(justAddedBlog.likes).toBe(0);
 });
 
 test("returns 400 bad request when title or url is missing", async () => {
   const newBlog = {
-    author: "Rick Hanlon"
-  }
+    author: "Rick Hanlon",
+  };
 
   await api
     .post("/api/blogs")
     .send(newBlog)
     .expect(400)
-    .expect("Content-Type", /application\/json/)
-})
+    .expect("Content-Type", /application\/json/);
+});
+
+test("blog post is deleted", async () => {
+  await api.delete(`/api/blogs/5a422bc61b54a676234d17fc`).expect(204);
+
+  const response = await api.get("/api/blogs");
+  const titles = response.body.map((blog) => blog.title);
+
+  expect(response.body).toHaveLength(initialBlogs.length - 1);
+  expect(titles).not.toContain("Type wars");
+});
 
 afterAll(() => {
   mongoose.connection.close();
