@@ -26,6 +26,12 @@ blogRouter.post("/", async (req, res) => {
     likes: body.likes,
   });
 
+  if (!newBlog.title || !newBlog.url) {
+    return res.status(400).send({
+      error: "title or url missing"
+    })
+  }
+
   if (!newBlog.likes) {
     newBlog.likes = 0;
   }

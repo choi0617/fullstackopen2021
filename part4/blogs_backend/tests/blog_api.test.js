@@ -127,6 +127,18 @@ test("likes default to 0", async () => {
   expect(justAddedBlog.likes).toBe(0)
 });
 
+test("returns 400 bad request when title or url is missing", async () => {
+  const newBlog = {
+    author: "Rick Hanlon"
+  }
+
+  await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .expect(400)
+    .expect("Content-Type", /application\/json/)
+})
+
 afterAll(() => {
   mongoose.connection.close();
 });
