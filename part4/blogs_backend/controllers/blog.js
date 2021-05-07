@@ -26,8 +26,12 @@ blogRouter.post("/", async (req, res) => {
     likes: body.likes,
   });
 
+  if (!newBlog.likes) {
+    newBlog.likes = 0;
+  }
+
   const savedBlog = await newBlog.save();
-  res.json(savedBlog)
+  res.status(201).json(savedBlog)
 });
 
 blogRouter.delete("/:id", async (req, res) => {

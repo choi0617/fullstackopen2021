@@ -80,7 +80,7 @@ test("all blogs are returned", async () => {
   expect(response.body).toHaveLength(initialBlogs.length);
 });
 
-test("id field is defined", async () => {
+test("id field is correctly named", async () => {
   const response = await api.get("/api/blogs");
   console.log(response);
 
@@ -89,11 +89,11 @@ test("id field is defined", async () => {
 
 test("a new blog post is added", async () => {
   const newBlog = {
-    title: 'Great developer experience',
-    author: 'Hector Ramos',
-    url: 'https://jestjs.io/blog/2017/01/30/a-great-developer-experience',
-    likes: 7
-  }
+    title: "Great developer experience",
+    author: "Hector Ramos",
+    url: "https://jestjs.io/blog/2017/01/30/a-great-developer-experience",
+    likes: 7,
+  };
 
   await api
     .post("/api/blogs")
@@ -106,6 +106,25 @@ test("a new blog post is added", async () => {
 
   expect(response.body).toHaveLength(initialBlogs.length + 1);
   expect(titles).toContain("Great developer experience");
+});
+
+test("likes default to 0", async () => {
+  const newBlog = {
+    title: "Blazing Fast Delightful Testing",
+    author: "Rick Hanlon",
+    url: "https://jestjs.io/blog/2017/01/30/a-great-developer-experience",
+  };
+
+  await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .expect(201)
+    .expect("Content-Type", /application\/json/);
+
+  const response = await api.get("/api/blogs")
+  const justAddedBlog = response.body.find(b => b.url === newBlog.url)
+
+  expect(justAddedBlog.likes).toBe(0)
 });
 
 afterAll(() => {
