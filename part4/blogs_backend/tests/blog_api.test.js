@@ -140,13 +140,26 @@ test("returns 400 bad request when title or url is missing", async () => {
 });
 
 test("blog post is deleted", async () => {
-  await api.delete(`/api/blogs/5a422bc61b54a676234d17fc`).expect(204);
+  await api.delete("/api/blogs/5a422bc61b54a676234d17fc").expect(204);
 
   const response = await api.get("/api/blogs");
   const titles = response.body.map((blog) => blog.title);
 
   expect(response.body).toHaveLength(initialBlogs.length - 1);
   expect(titles).not.toContain("Type wars");
+});
+
+test("blog post is updated", async () => {
+  const aBlog = await api.get("/api/blogs/5a422bc61b54a676234d17fc");
+  await api
+    .put("/api/blogs/5a422bc61b54a676234d17fc")
+    .send({
+      likes: aBlog.body.likes + 1,
+    })
+    .expect(200);
+
+  const response = await api.get("/api/blogs/5a422bc61b54a676234d17fc");
+  expect(response.body.likes).toBe(aBlog.body.likes + 1);
 });
 
 afterAll(() => {
