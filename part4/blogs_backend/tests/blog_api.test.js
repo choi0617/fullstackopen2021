@@ -217,6 +217,26 @@ describe("when there is initially one user in db", () => {
     const usernames = usersAtEnd.map((user) => user.username);
     expect(usernames).toContain("testusername");
   });
+
+  test("creation of user fails if username is taken", async () => {
+    const usersAtStart = await User.find({});
+
+    const newUser = {
+      username: "root",
+      password: "supersecret",
+    };
+
+    const result = await api
+      .post("/api/users")
+      .send(newUser)
+      .expect(400)
+      .expect("Content-Type", /application\/json/);
+
+    expect(result.body.error).toContain("`username` to be unique");
+
+    const usersAtEnd = await User.find({});
+    expect(usersAtEnd).toHaveLength(usersAtStart.length);
+  });
 });
 
 afterAll(() => {
