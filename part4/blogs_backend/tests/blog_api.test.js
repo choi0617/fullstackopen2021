@@ -195,8 +195,11 @@ describe("when there is initially one user in db", () => {
       .expect('Content-Type', /application\/json/)
 
 
-    // const usersAtEnd = await User.find({});
-    // expect(usersAtEnd).toHaveLength(usersAtStart.length + 1);
+    const usersAtEnd = await User.find({});
+    expect(usersAtEnd).toHaveLength(usersAtStart.length + 1);
+
+    const usernames = usersAtEnd.map(user => user.username)
+    expect(usernames).toContain("testusername")
   });
 });
 
