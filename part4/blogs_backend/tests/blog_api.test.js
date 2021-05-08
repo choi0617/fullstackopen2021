@@ -2,7 +2,9 @@ const mongoose = require("mongoose");
 const supertest = require("supertest");
 const app = require("../app");
 const api = supertest(app);
+const bcrypt = require("bcrypt");
 const Blog = require("../models/blog");
+const User = require("../models/user");
 
 const initialBlogs = [
   {
@@ -160,6 +162,42 @@ test("blog post is updated", async () => {
 
   const response = await api.get("/api/blogs/5a422bc61b54a676234d17fc");
   expect(response.body.likes).toBe(aBlog.body.likes + 1);
+});
+
+describe("when there is initially one user in db", () => {
+  beforeEach(async () => {
+    await User.deleteMany({});
+
+    const passwordHash = await bcrypt.hash("secretpw", 10);
+    const user = new User({
+      username: "root",
+      passwordHash,
+    });
+
+    await user.save();
+  });
+
+  test("create user succeeds", async () => {
+    const usersAtStart = await User.find({});
+
+    // no need for newUser = new User({}) because 
+    // you are sending newUser data as a POST request
+    const newUser = {
+      username: "testusername",
+      name: "john doe",
+      password: "supersecret",
+    };
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+
+    // const usersAtEnd = await User.find({});
+    // expect(usersAtEnd).toHaveLength(usersAtStart.length + 1);
+  });
 });
 
 afterAll(() => {
