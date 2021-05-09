@@ -9,7 +9,8 @@ Content-Type: application/json
     "title": "new blog 1",
     "author": "new author 1",
     "url": "some/url/1",
-    "likes": 4
+    "likes": 4,
+    "userId": "6096b8fe885b8f22f6fdb5b5"
 }
 
 ###
@@ -35,3 +36,9 @@ Content-Type: application/json
     "name": "Jane Doe",
     "password": "Password"
 }
+
+###
+GET http://localhost:3001/api/users/
+
+
+ 
