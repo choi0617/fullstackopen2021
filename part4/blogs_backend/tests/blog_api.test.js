@@ -237,6 +237,28 @@ describe("when there is initially one user in db", () => {
     const usersAtEnd = await User.find({});
     expect(usersAtEnd).toHaveLength(usersAtStart.length);
   });
+
+  test("returns 400 if bad password", async () => {
+    const usersAtStart = await User.find({});
+
+    const newUser = {
+      username: "test user",
+      name: "testname",
+      password: "",
+    };
+
+    const result = await api
+      .post("/api/users")
+      .send(newUser)
+      .expect(400)
+      .expect("Content-Type", /application\/json/);
+
+    expect(result.body.error).toContain(
+      "password must be a minimum length of 3 letters"
+    );
+    const usersAtEnd = await User.find({});
+    expect(usersAtEnd).toHaveLength(usersAtStart.length);
+  });
 });
 
 afterAll(() => {
