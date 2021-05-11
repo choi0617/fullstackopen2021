@@ -21,8 +21,10 @@ loginRouter.post("/", async (req, res) => {
     });
   }
 
+  // this obj is returned when the token is decoded by jwt.verify()
   const userForToken = {
     username: user.username,
+    name: user.name,
     id: user._id,
   };
 
