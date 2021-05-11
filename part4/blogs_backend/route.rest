@@ -4,7 +4,7 @@ GET http://localhost:3001/api/blogs
 
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXJuYW1lMSIsIm5hbWUiOiJKb2huIERvZSIsImlkIjoiNjA5OWVkODY2NGRhOWEyZWY5ZmMzYTQ5IiwiaWF0IjoxNjIwNzAwNTY2fQ.z_3YAZ98_H1LbLqJF-8GrV4nSxIbbsD_thp4Fv9dDko
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXJuYW1lMSIsIm5hbWUiOiJKb2huIERvZSIsImlkIjoiNjA5OWVkODY2NGRhOWEyZWY5ZmMzYTQ5IiwiaWF0IjoxNjIwNzYxNzMxfQ.W1ZrU2rUyRoJDejl_tq6BYoGkrqj5whPwebgBx7myEM
 
 {
     "title": "new blog 2",
@@ -15,7 +15,7 @@ Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZ
 }
 
 ###
-DELETE http://localhost:3001/api/blogs/6099eddf64da9a2ef9fc3a4b
+DELETE http://localhost:3001/api/blogs/6099ee211dd09d2f5b14a696
 
 ###
 PUT http://localhost:3001/api/blogs/5a422a851b54a676234d17f7
