@@ -19,8 +19,7 @@ const initialBlogs = [
     _id: "5a422aa71b54a676234d17f8",
     title: "Go To Statement Considered Harmful",
     author: "Edsger W. Dijkstra",
-    url:
-      "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
+    url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
     likes: 5,
     __v: 0,
   },
@@ -36,8 +35,7 @@ const initialBlogs = [
     _id: "5a422b891b54a676234d17fa",
     title: "First class tests",
     author: "Robert C. Martin",
-    url:
-      "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll",
+    url: "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll",
     likes: 10,
     __v: 0,
   },
@@ -45,8 +43,7 @@ const initialBlogs = [
     _id: "5a422ba71b54a676234d17fb",
     title: "TDD harms architecture",
     author: "Robert C. Martin",
-    url:
-      "http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html",
+    url: "http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html",
     likes: 0,
     __v: 0,
   },
@@ -141,6 +138,19 @@ describe("posting to api/blogs", () => {
     expect(titles).toContain("Great developer experience");
   });
 
+  test("returns 401 unauthorized if no token", async () => {
+    const newBlog = {
+      title: "New title 302345",
+      author: "New Author 302345",
+    };
+
+    await api
+      .post("/api/blogs")
+      .send(newBlog)
+      .expect(401)
+      .expect("Content-Type", /application\/json/);
+  });
+
   test("likes default to 0", async () => {
     const newBlog = {
       title: "Blazing Fast Delightful Testing",
@@ -192,7 +202,7 @@ describe("posting to api/blogs", () => {
       const aBlog = result.body;
       const blogsAtStart = await api.get("/api/blogs");
       await api.delete(`/api/blogs/${aBlog.id}`).set(headers).expect(204);
-      
+
       const response = await api.get("/api/blogs");
       const titles = response.body.map((blog) => blog.title);
 
@@ -219,7 +229,7 @@ describe("updating a blog", () => {
 
 describe("when there is initially one user in db", () => {
   beforeEach(async () => {
-    await User.deleteMany({});
+    // await User.deleteMany({});
 
     const passwordHash = await bcrypt.hash("secretpw", 10);
     const user = new User({
@@ -300,3 +310,5 @@ describe("when there is initially one user in db", () => {
 afterAll(() => {
   mongoose.connection.close();
 });
+
+
