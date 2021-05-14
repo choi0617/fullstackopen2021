@@ -62,6 +62,7 @@ const initialBlogs = [
 
 beforeEach(async () => {
   await Blog.deleteMany({});
+  await User.deleteMany({});
   await Blog.insertMany(initialBlogs);
 
   // for (let blog of initialBlogs) {
@@ -88,7 +89,6 @@ describe("when there are initially some blogs saved", () => {
 describe("viewing a specific blog", () => {
   test("id field is correctly named", async () => {
     const response = await api.get("/api/blogs");
-    console.log(response);
 
     expect(response.body[0].id).toBeDefined();
   });
@@ -100,7 +100,25 @@ describe("viewing a specific blog", () => {
   });
 });
 
-describe("adding a new blog", () => {
+describe("posting to api/blogs", () => {
+  let headers;
+
+  beforeEach(async () => {
+    const newUser = {
+      name: "john adams",
+      username: "jadams",
+      password: "password",
+    };
+
+    await api.post("/api/users").send(newUser);
+
+    const result = await api.post("/api/login").send(newUser);
+
+    headers = {
+      Authorization: `bearer ${result.body.token}`,
+    };
+  });
+
   test("a new blog post is added", async () => {
     const newBlog = {
       title: "Great developer experience",
@@ -112,7 +130,8 @@ describe("adding a new blog", () => {
     await api
       .post("/api/blogs")
       .send(newBlog)
-      .expect(200)
+      .set(headers)
+      .expect(201)
       .expect("Content-Type", /application\/json/);
 
     const response = await api.get("/api/blogs");
@@ -132,6 +151,7 @@ describe("adding a new blog", () => {
     await api
       .post("/api/blogs")
       .send(newBlog)
+      .set(headers)
       .expect(201)
       .expect("Content-Type", /application\/json/);
 
@@ -149,20 +169,36 @@ describe("adding a new blog", () => {
     await api
       .post("/api/blogs")
       .send(newBlog)
+      .set(headers)
       .expect(400)
       .expect("Content-Type", /application\/json/);
   });
-});
 
-describe("deletion of a blog", () => {
-  test("blog post is deleted", async () => {
-    await api.delete("/api/blogs/5a422bc61b54a676234d17fc").expect(204);
+  describe("deletion of a blog", () => {
+    let result;
 
-    const response = await api.get("/api/blogs");
-    const titles = response.body.map((blog) => blog.title);
+    beforeEach(async () => {
+      const newBlog = {
+        title: "Great developer experience",
+        author: "Hector Ramos",
+        url: "https://jestjs.io/blog/2017/01/30/a-great-developer-experience",
+        likes: 7,
+      };
 
-    expect(response.body).toHaveLength(initialBlogs.length - 1);
-    expect(titles).not.toContain("Type wars");
+      result = await api.post("/api/blogs").send(newBlog).set(headers);
+    });
+
+    test("blog post is deleted", async () => {
+      const aBlog = result.body;
+      const blogsAtStart = await api.get("/api/blogs");
+      await api.delete(`/api/blogs/${aBlog.id}`).set(headers).expect(204);
+      
+      const response = await api.get("/api/blogs");
+      const titles = response.body.map((blog) => blog.title);
+
+      expect(response.body).toHaveLength(blogsAtStart.body.length - 1);
+      expect(titles).not.toContain(aBlog.title);
+    });
   });
 });
 

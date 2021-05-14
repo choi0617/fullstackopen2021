@@ -32,14 +32,6 @@ blogRouter.get("/:id", async (req, res) => {
 
 blogRouter.post("/", userExtractor, async (req, res) => {
   const body = req.body;
-  // const token = req.token;
-
-  // const decodedToken = jwt.verify(token, process.env.SECRET);
-  // if (!token || !decodedToken) {
-  //   return res.status(401).json({
-  //     error: "token missing or invalid",
-  //   });
-  // }
 
   // decodedToken {
   //   username: 'username2',
@@ -48,7 +40,6 @@ blogRouter.post("/", userExtractor, async (req, res) => {
   //   iat: 1620700193
   // }
 
-  // const user = await User.findById(decodedToken.id);
   const user = req.user;
 
   const newBlog = new Blog({
@@ -70,35 +61,25 @@ blogRouter.post("/", userExtractor, async (req, res) => {
   }
 
   const savedBlog = await newBlog.save();
-  console.log("user", user);
-  // user.blogs = user.blogs.concat(savedBlog._id);
-  // await user.save();
+  // console.log("user", user);
+  user.blogs = user.blogs.concat(savedBlog._id);
+  await user.save();
 
   res.status(201).json(savedBlog);
 });
 
 blogRouter.delete("/:id", userExtractor, async (req, res) => {
   /* 
-    get token from request middleware
-    decode the token and get the userToken obj
-    check to see if token or if the decoded userToken id is valid
-    find user by id
-    find blog by req.params.id
-    the returned user and blog obj needs to be converted toString so we can compare
-    remove the blog
-    update the user.blogs property as well
+    - get token from request middleware
+    - decode the token and get the userToken obj
+    - check to see if token or if the decoded userToken id is valid
+    - find user by id
+    - find blog by req.params.id
+    - the returned user and blog obj needs to be converted toString so we can compare
+    - remove the blog
+    - update the user.blogs property as well
   */
-  // const token = req.token;
-
-  // const decodedToken = jwt.verify(token, process.env.SECRET);
-
-  // if (!token || !decodedToken.id) {
-  //   return res.status(401).json({
-  //     error: "token missing or invalid",
-  //   });
-  // }
-
-  // const user = await User.findById(decodedToken.id);
+  
   const user = req.user;
   const blog = await Blog.findById(req.params.id);
 
