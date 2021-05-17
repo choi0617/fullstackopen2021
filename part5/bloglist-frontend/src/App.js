@@ -14,13 +14,29 @@ const App = () => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
   }, []);
 
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem("loggedBlogUser")
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+
+    }
+  }, [])
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
+      // does a post request to /api/login then returns response.data to const user
+      // which also holds the token
       const user = await loginService.login({
         username,
         password,
       });
+
+      // Values saved to the storage are DOMstrings, so we cannot save a
+      // JavaScript object as is.
+      // The object has to be parsed to JSON first, with the method JSON.stringify.
+      window.localStorage.setItem("loggedBlogUser", JSON.stringify(user));
 
       setUser(user);
       setUsername("");
@@ -67,6 +83,11 @@ const App = () => {
     );
   };
 
+  const handleLogout = () => {
+    setUser(null)
+    window.localStorage.removeItem("loggedBlogUser")
+  };
+
   return (
     <div>
       {errorMessage && <p>{errorMessage}</p>}
@@ -74,10 +95,8 @@ const App = () => {
         loginForm()
       ) : (
         <div>
-          <p>
-            {user.name} logged in {blogForm()}
-          </p>
-
+          {user.name} logged in {blogForm()}{" "}
+          <button onClick={handleLogout}>logout</button>
           <h2>blogs</h2>
           {blogs.map((blog) => (
             <Blog key={blog.id} blog={blog} />
