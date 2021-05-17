@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Blog from "./components/Blog";
+import Notification from "./components/Notification";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 
@@ -11,7 +12,7 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -25,6 +26,15 @@ const App = () => {
       blogService.setToken(user.token);
     }
   }, []);
+
+  const notifyWith = (message, type='success') => {
+    setNotification({
+      message, type
+    })
+    setTimeout(() => {
+      setNotification(null)
+    }, 5000)
+  }
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -44,11 +54,9 @@ const App = () => {
       setUser(user);
       setUsername("");
       setPassword("");
+      notifyWith(`${user.name} welcome back!`)
     } catch (exception) {
-      setErrorMessage("Wrong Credentials");
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
+      notifyWith('wrong username or password', 'error')
     }
   };
 
@@ -65,6 +73,7 @@ const App = () => {
     setTitle("");
     setAuthor("");
     setUrl("");
+    notifyWith(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added!`)
   };
 
   const loginForm = () => {
@@ -95,36 +104,39 @@ const App = () => {
 
   const blogForm = () => {
     return (
-      <form onSubmit={addBlog}>
-        title:{" "}
-        <input
-          type="text"
-          name="Title"
-          value={title}
-          onChange={(e) => {
-            setTitle(e.target.value);
-          }}
-        />
-        author:{" "}
-        <input
-          type="text"
-          name="Author"
-          value={author}
-          onChange={(e) => {
-            setAuthor(e.target.value);
-          }}
-        />
-        url:{" "}
-        <input
-          type="text"
-          name="Url"
-          value={url}
-          onChange={(e) => {
-            setUrl(e.target.value);
-          }}
-        />
-        <button type="submit">create</button>
-      </form>
+      <div>
+        <h2>Create new</h2>
+        <form onSubmit={addBlog}>
+          title:{" "}
+          <input
+            type="text"
+            name="Title"
+            value={title}
+            onChange={(e) => {
+              setTitle(e.target.value);
+            }}
+          />
+          author:{" "}
+          <input
+            type="text"
+            name="Author"
+            value={author}
+            onChange={(e) => {
+              setAuthor(e.target.value);
+            }}
+          />
+          url:{" "}
+          <input
+            type="text"
+            name="Url"
+            value={url}
+            onChange={(e) => {
+              setUrl(e.target.value);
+            }}
+          />
+          <button type="submit">create</button>
+        </form>
+      </div>
     );
   };
 
@@ -135,11 +147,12 @@ const App = () => {
 
   return (
     <div>
-      {errorMessage && <p>{errorMessage}</p>}
+      <Notification notification={notification} />
       {user === null ? (
         loginForm()
       ) : (
         <div>
+          {}
           {user.name} logged in {blogForm()}{" "}
           <button onClick={handleLogout}>logout</button>
           <h2>blogs</h2>
