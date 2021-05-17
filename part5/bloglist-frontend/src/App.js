@@ -5,6 +5,9 @@ import loginService from "./services/login";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
+  const [url, setUrl] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
@@ -15,13 +18,13 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem("loggedBlogUser")
+    const loggedUserJSON = window.localStorage.getItem("loggedBlogUser");
     if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-
+      const user = JSON.parse(loggedUserJSON);
+      setUser(user);
+      blogService.setToken(user.token);
     }
-  }, [])
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -37,7 +40,7 @@ const App = () => {
       // JavaScript object as is.
       // The object has to be parsed to JSON first, with the method JSON.stringify.
       window.localStorage.setItem("loggedBlogUser", JSON.stringify(user));
-
+      blogService.setToken(user.token);
       setUser(user);
       setUsername("");
       setPassword("");
@@ -47,6 +50,21 @@ const App = () => {
         setErrorMessage(null);
       }, 5000);
     }
+  };
+
+  const addBlog = async (e) => {
+    e.preventDefault();
+    const blogObj = {
+      title,
+      author,
+      url,
+    };
+
+    const returnedBlog = await blogService.create(blogObj);
+    setBlogs([...blogs, returnedBlog]);
+    setTitle("");
+    setAuthor("");
+    setUrl("");
   };
 
   const loginForm = () => {
@@ -77,15 +95,42 @@ const App = () => {
 
   const blogForm = () => {
     return (
-      <form>
-        <input type="text" placeholder="add blog" />
+      <form onSubmit={addBlog}>
+        title:{" "}
+        <input
+          type="text"
+          name="Title"
+          value={title}
+          onChange={(e) => {
+            setTitle(e.target.value);
+          }}
+        />
+        author:{" "}
+        <input
+          type="text"
+          name="Author"
+          value={author}
+          onChange={(e) => {
+            setAuthor(e.target.value);
+          }}
+        />
+        url:{" "}
+        <input
+          type="text"
+          name="Url"
+          value={url}
+          onChange={(e) => {
+            setUrl(e.target.value);
+          }}
+        />
+        <button type="submit">create</button>
       </form>
     );
   };
 
   const handleLogout = () => {
-    setUser(null)
-    window.localStorage.removeItem("loggedBlogUser")
+    setUser(null);
+    window.localStorage.removeItem("loggedBlogUser");
   };
 
   return (
