@@ -18,6 +18,8 @@ const App = () => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
   }, []);
 
+  console.log(blogs);
+
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogUser");
     if (loggedUserJSON) {
@@ -92,6 +94,25 @@ const App = () => {
     window.localStorage.removeItem("loggedBlogUser");
   };
 
+  const handleLikes = async (id) => {
+    const blogToLike = blogs.find((b) => b.id === id);
+    const likedBlog = {
+      ...blogToLike,
+      likes: blogToLike.likes + 1,
+      user: blogToLike.user.id,
+    };
+    await blogService.update(id, likedBlog);
+    setBlogs(
+      blogs.map((b) =>
+        b.id === id ? { ...blogToLike, likes: blogToLike.likes + 1 } : b
+      )
+    );
+
+    // the code below will not work because setBlogs requires
+    // the whole user object not just the user id from likedBlog
+    // setBlogs(blogs.map((b) => b.id === id ? { ...likedBlog} : b))
+  };
+
   return (
     <div>
       <Notification notification={notification} />
@@ -104,7 +125,7 @@ const App = () => {
           <button onClick={handleLogout}>logout</button>
           <h2>blogs</h2>
           {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} />
+            <Blog key={blog.id} blog={blog} handleLikes={handleLikes} />
           ))}
         </div>
       )}

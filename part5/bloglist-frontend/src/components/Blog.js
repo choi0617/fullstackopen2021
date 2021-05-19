@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import Togglable from "../components/Togglable"
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, handleLikes }) => {
+  const [visible, setVisible] = useState(false)
+
+  const label = visible ? "hide" : "show"
 
   const blogStyle = {
     paddingTop: 10,
@@ -13,11 +15,18 @@ const Blog = ({ blog }) => {
 
   return (
     <div style={blogStyle}>
-      {blog.title} {blog.author}
-      <Togglable buttonLabel="view">
-        <p>url: {blog.url}</p>
-        <p>likes: {blog.likes}</p>
-      </Togglable>
+      <div>
+      {blog.title} by {blog.author} <button onClick={() => setVisible(!visible)}>{label}</button>
+      </div>
+
+      {visible && (
+        <div>
+          <p>url: {blog.url} </p>
+          <p>likes: {blog.likes} <button onClick={() => handleLikes(blog.id)}>Like</button> </p>
+        </div>
+      )}
+      
+
     </div>
   );
 };
