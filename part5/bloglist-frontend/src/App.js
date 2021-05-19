@@ -18,8 +18,6 @@ const App = () => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
   }, []);
 
-  console.log(blogs);
-
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogUser");
     if (loggedUserJSON) {
@@ -113,6 +111,9 @@ const App = () => {
     // setBlogs(blogs.map((b) => b.id === id ? { ...likedBlog} : b))
   };
 
+  const sortByLikes = (a,b) => b.likes-a.likes
+
+
   return (
     <div>
       <Notification notification={notification} />
@@ -124,7 +125,7 @@ const App = () => {
           {user.name} logged in <BlogForm addBlog={addBlog} />
           <button onClick={handleLogout}>logout</button>
           <h2>blogs</h2>
-          {blogs.map((blog) => (
+          {blogs.sort(sortByLikes).map((blog) => (
             <Blog key={blog.id} blog={blog} handleLikes={handleLikes} />
           ))}
         </div>
