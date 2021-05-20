@@ -1,16 +1,7 @@
 const blogRouter = require("express").Router();
-const jwt = require("jsonwebtoken");
 const Blog = require("../models/blog");
 const User = require("../models/user");
 const { userExtractor } = require("../utils/middleware");
-
-// const getTokenFrom = (req) => {
-//   const authorization = req.get("authorization");
-//   if (authorization && authorization.toLowerCase().startsWith("bearer")) {
-//     return authorization.substring(7);
-//   }
-//   return null;
-// };
 
 blogRouter.get("/", async (req, res) => {
   const blogs = await Blog.find({}).populate("user", {
@@ -42,13 +33,7 @@ blogRouter.post("/", userExtractor, async (req, res) => {
 
   const user = req.user;
 
-  const newBlog = new Blog({
-    title: body.title,
-    author: body.author,
-    url: body.url,
-    likes: body.likes,
-    user: user._id,
-  });
+  const newBlog = new Blog(body);
 
   if (!newBlog.title || !newBlog.url) {
     return res.status(400).send({
@@ -60,8 +45,9 @@ blogRouter.post("/", userExtractor, async (req, res) => {
     newBlog.likes = 0;
   }
 
+  newBlog.user = user;
   const savedBlog = await newBlog.save();
-  // console.log("user", user);
+  
   user.blogs = user.blogs.concat(savedBlog._id);
   await user.save();
 
