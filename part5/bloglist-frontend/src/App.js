@@ -63,14 +63,16 @@ const App = () => {
 
   const addBlog = async (blog) => {
     try {
+      // there is something wrong with setBlogs([...blogs, returnedBlog])
+      // i think blogs and returnedBlog are not the same
       const returnedBlog = await blogService.create(blog);
       setBlogs([...blogs, returnedBlog])
-      console.log(blogs);
+      console.log(returnedBlog);
       notifyWith(
         `a new blog ${returnedBlog.title} by ${returnedBlog.author} added!`
       );
     } catch (error) {
-      notifyWith("missing information", "error");
+      notifyWith(error.message, "error");
     }
   };
 
@@ -122,7 +124,7 @@ const App = () => {
 
   // .sort sorts the array in place (mutates the original array)
   const sortByLikes = (a, b) => b.likes - a.likes;
-
+  console.log("blogs", blogs)
   return (
     <div>
       <Notification notification={notification} />
