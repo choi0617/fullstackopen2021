@@ -22,8 +22,8 @@ const App = () => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogUser");
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
-      setUser(user);
       blogService.setToken(user.token);
+      setUser(user);
     }
   }, []);
 
@@ -64,12 +64,21 @@ const App = () => {
   const addBlog = async (blog) => {
     try {
       const returnedBlog = await blogService.create(blog);
-      setBlogs([...blogs, returnedBlog]);
+      setBlogs([...blogs, returnedBlog])
+      console.log(blogs);
       notifyWith(
         `a new blog ${returnedBlog.title} by ${returnedBlog.author} added!`
       );
     } catch (error) {
       notifyWith("missing information", "error");
+    }
+  };
+
+  const removeBlog = async (id) => {
+    const ok = window.confirm("Are you sure you want to delete it?");
+    if (ok) {
+      await blogService.deleteBlog(id);
+      setBlogs(blogs.filter((b) => b.id !== id));
     }
   };
 
@@ -111,8 +120,8 @@ const App = () => {
     // setBlogs(blogs.map((b) => b.id === id ? { ...likedBlog} : b))
   };
 
-  const sortByLikes = (a,b) => b.likes-a.likes
-
+  // .sort sorts the array in place (mutates the original array)
+  const sortByLikes = (a, b) => b.likes - a.likes;
 
   return (
     <div>
@@ -126,7 +135,13 @@ const App = () => {
           <button onClick={handleLogout}>logout</button>
           <h2>blogs</h2>
           {blogs.sort(sortByLikes).map((blog) => (
-            <Blog key={blog.id} blog={blog} handleLikes={handleLikes} />
+            <Blog
+              key={blog.id}
+              blog={blog}
+              own={blog.user.username === user.username}
+              removeBlog={removeBlog}
+              handleLikes={handleLikes}
+            />
           ))}
         </div>
       )}
