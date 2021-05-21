@@ -66,8 +66,8 @@ const App = () => {
       // there is something wrong with setBlogs([...blogs, returnedBlog])
       // i think blogs and returnedBlog are not the same
       const returnedBlog = await blogService.create(blog);
-      setBlogs([...blogs, returnedBlog])
-      
+      setBlogs([...blogs, returnedBlog]);
+
       notifyWith(
         `a new blog ${returnedBlog.title} by ${returnedBlog.author} added!`
       );
@@ -116,15 +116,11 @@ const App = () => {
         b.id === id ? { ...blogToLike, likes: blogToLike.likes + 1 } : b
       )
     );
-
-    // the code below will not work because setBlogs requires
-    // the whole user object not just the user id from likedBlog
-    // setBlogs(blogs.map((b) => b.id === id ? { ...likedBlog} : b))
   };
 
   // .sort sorts the array in place (mutates the original array)
   const sortByLikes = (a, b) => b.likes - a.likes;
- 
+
   return (
     <div>
       <Notification notification={notification} />
