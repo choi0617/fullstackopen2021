@@ -19,7 +19,7 @@ const Blog = ({ blog, handleLikes, own, removeBlog }) => {
         {blog.title} by {blog.author}{" "}
         <button onClick={() => setVisible(!visible)}>{label}</button>
       </div>
-      {console.log("own", own)}
+
       {visible && (
         <div>
           <p>url: {blog.url} </p>
@@ -28,7 +28,6 @@ const Blog = ({ blog, handleLikes, own, removeBlog }) => {
             <button onClick={() => handleLikes(blog.id)}>Like</button>{" "}
           </p>
           <p>{blog.user.name}</p>
-          {console.log("blog.user.username", blog.user.username)}
           {own && <button onClick={() => removeBlog(blog.id)}>Delete</button>}
         </div>
       )}

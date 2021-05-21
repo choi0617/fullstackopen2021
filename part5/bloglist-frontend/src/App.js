@@ -67,7 +67,7 @@ const App = () => {
       // i think blogs and returnedBlog are not the same
       const returnedBlog = await blogService.create(blog);
       setBlogs([...blogs, returnedBlog])
-      console.log(returnedBlog);
+      
       notifyWith(
         `a new blog ${returnedBlog.title} by ${returnedBlog.author} added!`
       );
@@ -124,7 +124,7 @@ const App = () => {
 
   // .sort sorts the array in place (mutates the original array)
   const sortByLikes = (a, b) => b.likes - a.likes;
-  console.log("blogs", blogs)
+ 
   return (
     <div>
       <Notification notification={notification} />
