@@ -38,4 +38,31 @@ describe("Blog", () => {
     expect(component.container).toHaveTextContent(blogContent.likes);
     expect(component.container).toHaveTextContent(blogContent.user.name);
   });
+
+  test("when liked twice, the event handler gets called twice", () => {
+    const blogContent = {
+      author: "Ron Jeffries",
+      title: "You’re NOT gonna need it!",
+      url: "https://ronjeffries.com/xprog/articles/practices/pracnotneed/",
+      likes: 3,
+      user: {
+        name: "john doe",
+      },
+    };
+
+    const handleLikes = jest.fn();
+
+    const component = render(
+      <Blog blog={blogContent} handleLikes={handleLikes} />
+    );
+
+    const showButton = component.getByText("show");
+    fireEvent.click(showButton);
+
+    const likeButton = component.getByText("Like");
+    fireEvent.click(likeButton);
+    fireEvent.click(likeButton);
+
+    expect(handleLikes.mock.calls).toHaveLength(2);
+  });
 });
