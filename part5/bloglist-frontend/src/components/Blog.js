@@ -14,7 +14,7 @@ const Blog = ({ blog, handleLikes, own, removeBlog }) => {
   };
 
   return (
-    <div style={blogStyle} className={'blog'}>
+    <div style={blogStyle} className="blog">
       <div>
         {blog.title} by {blog.author}{" "}
         <button onClick={() => setVisible(!visible)}>{label}</button>
