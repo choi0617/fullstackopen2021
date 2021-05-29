@@ -34,7 +34,7 @@ const reducer = (state = initialState, action) => {
   4) In the switch case: "VOTE", we find the anecdote to vote
   5) Then we update it to an object named changedVote
   6) Then we update the state which we return
-  
+
   */
   switch (action.type) {
     case "VOTE":
@@ -47,6 +47,8 @@ const reducer = (state = initialState, action) => {
       return state.map((anecdote) =>
         anecdote.id !== id ? anecdote : changedVote
       );
+    case "NEW_ANECDOTE":
+      return [...state, action.data];
     default:
       return state;
   }
@@ -56,6 +58,17 @@ export const upVote = (id) => {
   return {
     type: "VOTE",
     data: { id },
+  };
+};
+
+export const addAnecdote = (anecdote) => {
+  return {
+    type: "NEW_ANECDOTE",
+    data: {
+      content: anecdote,
+      id: getId(),
+      votes: 0,
+    },
   };
 };
 
