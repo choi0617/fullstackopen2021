@@ -72,10 +72,4 @@ export const addAnecdote = (anecdote) => {
   };
 };
 
-export const initializeAnecdotes = () => {
-  return {
-    data: initialState,
-  };
-};
-
 export default reducer;
