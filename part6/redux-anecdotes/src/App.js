@@ -1,5 +1,6 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
+import AnecdoteForm from "./components/AnecdoteForm";
 import {
   upVote,
   initializeAnecdotes,
@@ -32,13 +33,8 @@ const App = () => {
           </div>
         </div>
       ))}
-      <h2>create new</h2>
-      <form onSubmit={handleAddAnecdote}>
-        <div>
-          <input name="anecdoteInput" />
-        </div>
-        <button type="submit">create</button>
-      </form>
+
+      <AnecdoteForm handleAddAnecdote={handleAddAnecdote} />
     </div>
   );
 };
