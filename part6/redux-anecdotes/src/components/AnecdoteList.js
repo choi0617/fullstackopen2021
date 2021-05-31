@@ -1,6 +1,6 @@
 import React from "react";
 import { upVote } from "../reducers/anecdoteReducer";
-import { setFilter } from "../reducers/filterReducer";
+
 import {
   setNotification,
   clearNotification,
