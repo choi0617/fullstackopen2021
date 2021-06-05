@@ -9,12 +9,16 @@ import { useDispatch, useSelector } from "react-redux";
 
 const AnecdoteList = () => {
   const dispatch = useDispatch();
+
   const anecdotes = useSelector((state) => {
     const filter = state.filter.toLowerCase();
+
     return state.anecdotes.filter((anecdote) =>
       anecdote.content.toLowerCase().includes(filter)
     );
   });
+
+  console.log("Anecdote List", anecdotes);
 
   const vote = (id) => {
     const toVote = anecdotes.find((a) => a.id === id);
