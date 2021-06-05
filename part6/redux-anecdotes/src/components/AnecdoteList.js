@@ -22,10 +22,7 @@ const AnecdoteList = () => {
     const toVote = anecdotes.find((a) => a.id === id);
 
     dispatch(upVote(toVote));
-    dispatch(setNotification(`you voted '${toVote.content}`));
-    setTimeout(() => {
-      dispatch(clearNotification());
-    }, 5000);
+    dispatch(setNotification(`you voted '${toVote.content}`, 3));
   };
 
   anecdotes.sort((a, b) => b.votes - a.votes);

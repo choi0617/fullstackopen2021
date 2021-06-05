@@ -22,10 +22,18 @@ const reducer = (state = null, action) => {
   }
 };
 
-export const setNotification = (content) => {
-  return {
-    type: "SET_NOTIFICATION",
-    content,
+export const setNotification = (content, timer) => {
+  return async (dispatch) => {
+    dispatch({
+      type: "SET_NOTIFICATION",
+      content,
+    });
+
+    setTimeout(() => {
+      dispatch({
+        type: "CLEAR_NOTIFICATION",
+      });
+    }, timer * 1000);
   };
 };
 
