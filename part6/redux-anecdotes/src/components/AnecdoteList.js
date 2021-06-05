@@ -18,11 +18,10 @@ const AnecdoteList = () => {
     );
   });
 
-  console.log("Anecdote List", anecdotes);
-
   const vote = (id) => {
     const toVote = anecdotes.find((a) => a.id === id);
-    dispatch(upVote(id));
+
+    dispatch(upVote(toVote));
     dispatch(setNotification(`you voted '${toVote.content}`));
     setTimeout(() => {
       dispatch(clearNotification());

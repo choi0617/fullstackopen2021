@@ -14,10 +14,7 @@ const AnecdoteForm = () => {
     }
     e.target.anecdoteInput.value = "";
 
-    const newAnecdote = await anecdoteService.createNew(content);
-    console.log("NEW ANECDOTE", newAnecdote);
-    // returns an obj { content: content, votes:0, id: randomlyGenerated}
-    dispatch(addAnecdote(newAnecdote));
+    dispatch(addAnecdote(content));
   };
 
   return (
